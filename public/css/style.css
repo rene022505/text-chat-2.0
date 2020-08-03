@@ -1,0 +1,108 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #262138;
+    display: flex;
+}
+
+.left {
+    width: 15vw;
+    height: 100vh;
+}
+
+.chat {
+    width: 70vw;
+    height: 94vh;
+    overflow-y: auto;
+}
+
+.right {
+    width: 15vw;
+    height: 100vh;
+}
+
+.input {
+    position: fixed;
+    top: 95vh;
+    left: 15vw;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    width: 70vw;
+}
+
+.inTextField {
+    height: 3vh;
+    background-color: #130e22;
+    color: #dbdbdb;
+    width: inherit;
+    border-color: transparent;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.sendButton {
+    background-color: #130e22;
+    color: #dbdbdb;
+    font-size: 1.5vh;
+    padding: 0.75vh;
+    margin: 0;
+    width: fit-content;
+    border-color: transparent;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.sendButton:hover {
+    cursor: pointer;
+}
+
+/* removes the outline of selected element */
+.inTextField:focus, .sendButton:focus {
+    outline: none;
+}
+
+.message {
+    padding: 6px;
+    width: 69vw;
+    word-wrap: break-word;
+    transition-duration: 0.1s;
+    border-radius: 4px;
+}
+
+.message:hover {
+    background-color: #38324d;
+}
+
+.name {
+    color: #dbdbdb;
+    font-weight: bolder;
+}
+
+.content {
+    color: #dbdbdb;
+}
+
+/* scrollbar stuff */
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
+  
+  /* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+  
+  /* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-color: transparent;
+    border-radius: 5px;
+}
+  
+  /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
