@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./../css/loginStyle.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <title>Register</title>
+</head>
+
+<body>
+    <div class="container">
+        <div id="regDiv">
+            <h1 class="regHeader">LOGIN</h1>
+            <form action="/register" method="POST" encType="multipart/form-data" id="form">
+                <label class="regLabel">NAME</label>
+                <input name="username" class="input-text" type="text" id="username" required>
+                
+                <label class="regLabel">PASSWORD</label>
+                <input name="password" class="input-text" type="password" id="password" required>
+
+                <button type="button" id="login" class="submitButton">Login</button>
+                <div id="fail" class="invisible">
+                    <p id="failDesc"></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="./../js/loginApp.js"></script>
+</body>
+
+</html>

@@ -33,7 +33,7 @@ $(document).ready(function () {
     });
 
     socket.on("newMes", function (data) {
-        const mes = `<div class="message"><div class="image"><img src=${data.pfp} class="pfp"></div><div class=text><div class="name">${data.sender}</div><div class="content">${data.message}</div></div></div>`;
+        const mes = `<div class="message"><div class="image"><img src=${data.pfp} class="pfp"></div><div class=text><div class="name" style="color: #${data.color};">${data.sender}</div><div class="content">${data.message}</div></div></div>`;
         $(".chat").append(mes);
 
         //scrolls to bottom

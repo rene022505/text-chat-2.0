@@ -72,7 +72,7 @@ $(document).ready(function () {
                                 alert("Passwords don't match");
                             else {
                                 sessionStorage.setItem("id", data);
-                                window.location.href = "http://localhost:6969/"; // TODO CHANGE
+                                window.location.href = "http://localhost:6969/chat"; // TODO CHANGE
                             }
                         })
                         .fail(function () {

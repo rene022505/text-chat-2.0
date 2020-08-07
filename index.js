@@ -43,13 +43,44 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
-app.use(fileUpload({ limits: { fileSize: 50 * 1024 * 1024 } }));
+app.use(fileUpload({ limits: { fileSize: 10 * 1024 * 1024 } }));
 
 //? Serving folder with css, js and loginpage
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get("/", function (req, res) {
+app.get("/chat", function (req, res) {
     res.sendFile(path.join(__dirname, "public/view/index.html"));
+});
+
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, "public/view/login.html"));
+});
+
+app.post("/login", function (req, res) {
+    con.query(`SELECT textchat.user.password as password FROM textchat.user where textchat.user.username="${req.body.username}"`, function(err, resD) {
+        if (err) {
+            console.log(err);
+            res.sendStatus(404);
+            return;
+        }
+        if (resD[0] == undefined) {
+            res.send("1");
+            return;
+        }
+        bcrypt.compare(req.body.password, resD[0].password, function(err, resH) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (!resH) {
+                res.send("1");
+                return;
+            }
+            con.query(`select textchat.user.iduser as id from textchat.user where textchat.user.username="${req.body.username}"`, function (err, resD1) {
+                res.send(resD1[0].id);
+            });
+        });
+    });
 });
 
 app.get("/register", function (req, res) {
@@ -68,6 +99,7 @@ app.post("/register", function (req, res) {
             res.sendStatus(404);
             return;
         }
+
         if (resD[0].valid !== 0) {
             res.send("2");
             return;
@@ -152,7 +184,7 @@ io.sockets.on("connection", function (socket) {
                     return;
                 }
                 let name = resD0[0].username;
-                con.query(`SELECT textchat.user.picture as pfp FROM textchat.user WHERE textchat.user.username="${name}"`, function (err, resD) {
+                con.query(`SELECT textchat.user.picture as pfp, textchat.user.color as color FROM textchat.user WHERE textchat.user.username="${name}"`, function (err, resD) {
                     if (err) {
                         console.log(err);
                         return;
@@ -166,7 +198,8 @@ io.sockets.on("connection", function (socket) {
                         io.sockets.emit("newMes", {
                             sender: name,
                             message: data.message,
-                            pfp: `data:image/${resD[0].pfp.substring(resD[0].pfp.lastIndexOf(".") + 1)};base64,` + picData.toString("base64")
+                            pfp: `data:image/${resD[0].pfp.substring(resD[0].pfp.lastIndexOf(".") + 1)};base64,` + picData.toString("base64"),
+                            color: resD[0].color
                         });
                     });
                 });

@@ -66,7 +66,7 @@ body {
 
 .message {
     padding: 6px;
-    width: 69vw;
+    width: auto;
     word-wrap: break-word;
     transition-duration: 0.1s;
     border-radius: 4px;
