@@ -14,10 +14,10 @@ $(document).ready(function () {
     $("#send").on("click", function () {
         if ($("#userInput").val() !== "") {
             socket.emit("mes", {
-                sender: name,
+                sender: window.sessionStorage.getItem("id"),
                 message: $("#userInput").val()
             });
-    
+
             $("#userInput").val("");
         }
     });
@@ -32,12 +32,16 @@ $(document).ready(function () {
         }
     });
 
-        socket.on("newMes", function (data) {
-            let mes = `<div class="message"><div class="name">${data.sender}</div><div class="content">${data.message}</div></div>`;
-            $(".chat").append(mes);
+    socket.on("newMes", function (data) {
+        const mes = `<div class="message"><div class="image"><img src=${data.pfp} class="pfp"></div><div class=text><div class="name">${data.sender}</div><div class="content">${data.message}</div></div></div>`;
+        $(".chat").append(mes);
 
-            //scrolls to bottom
-            let chat = document.getElementsByClassName("chat")[0];
-            chat.scrollTop = chat.scrollHeight;
-        });
+        //scrolls to bottom
+        const chat = document.getElementsByClassName("chat")[0];
+        chat.scrollTop = chat.scrollHeight;
     });
+
+    socket.on("qErr", function(data) {
+        console.log(data);
+    });
+});

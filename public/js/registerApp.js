@@ -1,43 +1,88 @@
 $(document).ready(function () {
-    $("#uname").on("input", function () {
-        if ($("#uname").val().length > 3) {
+    $("#username").on("input", function () {
+        if ($("#username").val().length > 3 && $("#username").val().length < 41) {
             $.ajax({
                 url: "/checkUsername",
                 type: "post",
                 data: {
-                    username: $("#uname").val()
+                    username: $("#username").val()
                 }
             })
-                .done(function () { // TODO: change
-                    $("#taken").text("Username available!");
-                    $("#taken").css("color", "green");
+                .done(function () {
+                    $("#username").removeClass("red");
+                    $("#username").addClass("green");
                 })
                 .fail(function () {
-                    $("#taken").text("Username already taken!");
-                    $("#taken").css("color", "red");
+                    $("#username").removeClass("green");
+                    $("#username").addClass("red");
                 });
         } else {
-            $("#taken").text("Username must be 4 or more characters!");
-            $("#taken").css("color", "red");
+            $("#username").removeClass("green");
+            $("#username").addClass("red");
+        }
+    });
+
+    $("#password").on("input", function () {
+        if ($("#password").val().length < 6 || $("#password").val().length > 64) {
+            $("#password").removeClass("green");
+            $("#password").addClass("red");
+            $("#confirmPassword").removeClass("green");
+            $("#confirmPassword").addClass("red");
+        } else {
+            if ($("#confirmPassword").val() !== $("#password").val()) {
+                $("#confirmPassword").removeClass("green");
+                $("#confirmPassword").addClass("red");
+            }
+            $("#password").removeClass("red");
+            $("#password").addClass("green");
+        }
+    });
+
+    $("#confirmPassword").on("input", function () {
+        if ($("#confirmPassword").val() !== $("#password").val() || $("#confirmPassword").val() === "") {
+            $("#confirmPassword").removeClass("green");
+            $("#confirmPassword").addClass("red");
+        } else {
+            $("#confirmPassword").removeClass("red");
+            $("#confirmPassword").addClass("green");
         }
     });
 
     $("#register").on("click", function () {
-        $.ajax({
-            url: "/register",
-            type: "post",
-            enctype: 'multipart/form-data',
-            processData: false,  // Important!
-            contentType: false,
-            cache: false,
-            data: new FormData($("#form")[0])
-        })
-            .done(function () {
-                // TODO
-            })
-            .fail(function () {
-                // TODO
-            });
-        ;
+        if ($("#username").val().length > 3 && $("#username").val().length < 41) {
+            if ($("#password").val().length > 5 && $("#password").val().length < 65) {
+                if ($("#confirmPassword").val() === $("#password").val()) {
+                    $.ajax({
+                        url: "/register",
+                        type: "post",
+                        enctype: 'multipart/form-data',
+                        processData: false,  // Important!
+                        contentType: false,
+                        cache: false,
+                        data: new FormData($("#form")[0])
+                    })
+                        .done(function (data) {
+                            if (data == 1)
+                                alert("Username must be between 4 and 40 characters");
+                            else if (data == 2)
+                                alert("Username already exists");
+                            else if (data == 3)
+                                alert("Password must be bewteen 6 and 64 characters");
+                            else if (data == 4)
+                                alert("Passwords don't match");
+                            else {
+                                sessionStorage.setItem("id", data);
+                                window.location.href = "http://localhost:6969/"; // TODO CHANGE
+                            }
+                        })
+                        .fail(function () {
+                            // TODO
+                        });
+                } else
+                    alert("Passwords don't match")
+            } else
+                alert("Password must be between 6 and 64 characters");
+        } else
+            alert("Username must be between 4 and 40 characters");
     });
 });

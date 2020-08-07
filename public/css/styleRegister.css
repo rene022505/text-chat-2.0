@@ -1,13 +1,94 @@
+html, body {
+    height: 100%;
+}
+
 body {
     padding: 0;
     margin: 0;
     background-color: #262138;
+    font-family: sans-serif;
 }
 
-label, h1, input {
+label, h1 {
     color: #dbdbdb;
 }
 
 input:focus, button:focus {
     outline: none;
+}
+
+.input-text {
+    font-size: x-large;
+    color: black;
+    width: 360px;
+}
+
+.regLabel {
+    font-size: small;
+    display: block;
+    text-align: left;
+    margin-bottom: .5rem;
+}
+
+#accCustom {
+    display: flex;
+    flex-direction: row;
+}
+
+#pfpDiv, #colorDiv {
+    display: flex;
+    flex-direction: column;
+}
+
+.customLabel {
+    margin-bottom: .5rem;
+}
+
+input {
+    margin-bottom: 1.2rem;
+}
+
+.regHeader {
+    margin: 0;
+    padding: .5rem 0 1rem 0;
+}
+
+.container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#regDiv {
+    background-color: #4a4462;
+    border-radius: 8px;
+    width: 370px;
+    padding: 1rem;
+}
+
+.submitButton {
+    border: none;
+    font-size: large;
+    border-radius: 5px;
+    margin-bottom: .5rem;
+}
+
+.submitButton:hover, #pfp:hover, #color:hover {
+    cursor: pointer;
+}
+
+.green {
+    border-color: rgb(1, 207, 1);
+    border-width: 2px;
+    font-size: x-large;
+    width: 360px;
+}
+.red {
+    border-color: red;
+    border-width: 2px;
+    font-size: x-large;
+    width: 360px;
 }

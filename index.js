@@ -4,6 +4,8 @@ const fileUpload = require('express-fileupload');
 const bodyParser = require("body-parser");
 const path = require("path");
 
+const fs = require("fs");
+
 const app = express();
 const server = app.listen(6969, startUp);
 
@@ -13,9 +15,9 @@ const mysql = require("mysql");
 
 const bcrypt = require("bcrypt");
 
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4, v1: uuidv1 } = require('uuid');
 
-let con = mysql.createConnection({
+const con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: ""
@@ -55,49 +57,71 @@ app.get("/register", function (req, res) {
 });
 
 app.post("/register", function (req, res) {
-    if (req.body.username < 4 || req.body.username > 40) {
-        res.sendStatus(403); // TODO: error if username smaller 4 or bigger 40 chars
+    if (req.body.username.length < 4 || req.body.username.length > 40) {
+        res.send("1");
         return;
     }
 
     con.query(`SELECT count(textchat.user.username) as valid FROM textchat.user WHERE textchat.user.username="${req.body.username}"`, function (err, resD) {
-        if (resD[0].valid !== 0) { // TODO: error if username restriction client side bypassed
-            res.sendStatus(403);
-            return;
-        }
-    });
-
-    if (req.body.password.length < 5 || req.body.password.length > 64) {
-        res.sendStatus(403); // TODO: error if password smaller 5 or bigger 64 chars
-        return;
-    }
-
-    let filetype;
-    let filename;
-    if (!(!req.files || Object.keys(req.files).length === 0)) {
-        filetype = req.files.pfp.mimetype;
-        if (filetype.substring(0, filetype.lastIndexOf("/")) !== "image")
-            filename = "default.png";
-        else
-            filename = `${req.body.username}.${filetype.substring(filetype.lastIndexOf("/") + 1)}`;
-        req.files.pfp.mv(path.join(__dirname, `profilepictures/${filename}`));
-    } else {
-        filename = "default.png";
-    }
-
-    bcrypt.hash(req.body.password, 10, function (err, hash) {
         if (err) {
             console.log(err);
+            res.sendStatus(404);
             return;
-        } 
-        con.query(`INSERT INTO textchat.user(iduser, username, password, picture, color) VALUES ("${uuidv4()}", "${req.body.username}", "${hash}", "${filename}", "${req.body.color.substring(1)}");`, function (err, resD) {
-            if (err) console.log(err);
+        }
+        if (resD[0].valid !== 0) {
+            res.send("2");
+            return;
+        }
+
+        if (req.body.password.length < 6 || req.body.password.length > 64) {
+            res.send("3");
+            return;
+        }
+
+        if (req.body.password !== req.body.confirmPassword) {
+            res.send("4");
+            return;
+        }
+
+        let filetype;
+        let filename;
+        if (!(!req.files || Object.keys(req.files).length === 0)) {
+            filetype = req.files.pfp.mimetype;
+            if (filetype.substring(0, filetype.lastIndexOf("/")) !== "image")
+                filename = "default.png";
+            else
+                filename = `${uuidv1()}.${filetype.substring(filetype.lastIndexOf("/") + 1)}`;
+            req.files.pfp.mv(path.join(__dirname, `profilepictures/${filename}`));
+        } else {
+            filename = "default.png";
+        }
+
+        bcrypt.hash(req.body.password, 10, function (err, hash) {
+            if (err) {
+                console.log(err);
+                res.sendStatus(404);
+                return;
+            }
+            let tempUUID = uuidv4();
+            con.query(`INSERT INTO textchat.user(iduser, username, password, picture, color) VALUES ("${tempUUID}", "${req.body.username}", "${hash}", "${filename}", "${req.body.color.substring(1)}");`, function (err, resD) {
+                if (err) {
+                    console.log(err);
+                    res.sendStatus(404);
+                    return;
+                }
+                res.send("" + tempUUID);
+            });
         });
     });
 });
 
 app.post("/checkUsername", function (req, res) {
     con.query(`SELECT count(textchat.user.username) as valid FROM textchat.user WHERE textchat.user.username="${req.body.username}"`, function (err, resD) {
+        if (err) {
+            console.log(err);
+            res.sendStatus(404);
+            return;
+        }
         if (resD[0].valid === 0)
             res.sendStatus(200);
         else
@@ -108,16 +132,44 @@ app.post("/checkUsername", function (req, res) {
 io.sockets.on("connection", function (socket) {
     console.log(socket.id + " connected!");
 
+    // TODO REWORK
     socket.on("reg", function (data) {
         console.log("\"" + data.name + "\" registered in the chat!");
     });
 
     socket.on("mes", function (data) {
         if (data.message !== "") {
-            console.log("\"" + data.sender + "\" sent: " + data.message);
-            io.sockets.emit("newMes", {
-                sender: data.sender,
-                message: data.message
+            con.query(`select textchat.user.username as username from textchat.user where textchat.user.iduser="${data.sender}"`, function (err, resD0) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if (resD0[0] == undefined) {
+                    socket.emit("qErr", {
+                        errorCode: 2,
+                        errorMessage: "User-ID not found"
+                    });
+                    return;
+                }
+                let name = resD0[0].username;
+                con.query(`SELECT textchat.user.picture as pfp FROM textchat.user WHERE textchat.user.username="${name}"`, function (err, resD) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    fs.readFile("profilepictures\\" + resD[0].pfp, function (err, picData) {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
+
+                        io.sockets.emit("newMes", {
+                            sender: name,
+                            message: data.message,
+                            pfp: `data:image/${resD[0].pfp.substring(resD[0].pfp.lastIndexOf(".") + 1)};base64,` + picData.toString("base64")
+                        });
+                    });
+                });
             });
         }
     });

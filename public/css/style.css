@@ -3,6 +3,7 @@ body {
     margin: 0;
     background-color: #262138;
     display: flex;
+    font-family: sans-serif;
 }
 
 .left {
@@ -69,6 +70,24 @@ body {
     word-wrap: break-word;
     transition-duration: 0.1s;
     border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+}
+
+.image {
+    width: 48px;
+    height: 48px;
+}
+
+.pfp {
+    vertical-align: middle;
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+}
+
+.text {
+
 }
 
 .message:hover {

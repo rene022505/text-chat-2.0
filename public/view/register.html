@@ -10,21 +10,35 @@
 </head>
 
 <body>
-    <h1>
-        Register
-    </h1>
-    <form action="/register" method="POST" encType="multipart/form-data" id="form">
-        <label>Name</label><br>
-        <input name="username" type="text" id="uname" required>
-        <p id="taken" style="color: red">Username must be 4 or more characters!</p>
-        <label>Password</label><br>
-        <input name="password" type="password" id="password" required><br>
-        <label>Color</label><br>
-        <input name="color" type="color" id="color"><br>
-        <label>Profile picture</label><br>
-        <input name="pfp" type="file" id="pfp"><br>
-        <button type="button" id="register">Register</button>
-    </form>
+    <div class="container">
+        <div id="regDiv">
+            <h1 class="regHeader">REGISTER</h1>
+            <form action="/register" method="POST" encType="multipart/form-data" id="form">
+                <label class="regLabel">NAME</label>
+                <input name="username" class="input-text" type="text" id="username" required>
+                
+                <label class="regLabel">PASSWORD</label>
+                <input name="password" class="input-text" type="password" id="password" required>
+                
+                <label class="regLabel">CONFIRM PASSWORD</label>
+                <input name="confirmPassword" class="input-text" type="password" id="confirmPassword" required>
+
+                <div id="accCustom">
+                    <div id="pfpDiv">
+                        <label class="customLabel">PROFILE PICTURE</label>
+                        <input name="pfp" type="file" id="pfp">
+                    </div>
+                    <div id="colorDiv">
+                        <label class="customLabel">NAME COLOR</label>
+                        <input name="color" type="color" id="color">
+                    </div>
+                </div>
+
+                <button type="button" id="register" class="submitButton">Register</button>
+            </form>
+        </div>
+    </div>
+
     <script src="./../js/registerApp.js"></script>
 </body>
 
