@@ -1,16 +1,6 @@
 const socket = io.connect('localhost:6969');
 
 $(document).ready(function () {
-    // change name to "" and uncomment while loop
-    let name = "rene";
-
-    //while (name === "")
-    //    name = prompt("Enter your name");
-
-    socket.emit("reg", {
-        name: name
-    });
-
     $("#send").on("click", function () {
         if ($("#userInput").val() !== "") {
             socket.emit("mes", {

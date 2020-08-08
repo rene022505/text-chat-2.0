@@ -27,14 +27,6 @@ con.connect(function (err) {
     console.log("Connected!");
 });
 
-/* LATER
-con.query("SELECT * FROM textchat.user", function(err, resD) {
-    bcrypt.compare("password", resD[0].password, function(err, resH) {
-        console.log(resH);
-    });
-});
-*/
-
 function startUp() {
     console.log("Server started at " + server.address().address + ":" + server.address().port);
 }
@@ -49,7 +41,7 @@ app.use(fileUpload({ limits: { fileSize: 10 * 1024 * 1024 } }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get("/chat", function (req, res) {
-    res.sendFile(path.join(__dirname, "public/view/index.html"));
+    res.sendFile(path.join(__dirname, "public/view/chat.html"));
 });
 
 app.get("/", function (req, res) {
@@ -57,7 +49,7 @@ app.get("/", function (req, res) {
 });
 
 app.post("/login", function (req, res) {
-    con.query(`SELECT textchat.user.password as password FROM textchat.user where textchat.user.username="${req.body.username}"`, function(err, resD) {
+    con.query(`SELECT textchat.user.password as password, textchat.user.iduser as id FROM textchat.user where textchat.user.username="${req.body.username}"`, function(err, resD) {
         if (err) {
             console.log(err);
             res.sendStatus(404);
@@ -72,13 +64,13 @@ app.post("/login", function (req, res) {
                 console.log(err);
                 return;
             }
-            if (!resH) {
+            if (resH) {
+                res.send(resD[0].id);
+                return;
+            } else {
                 res.send("1");
                 return;
             }
-            con.query(`select textchat.user.iduser as id from textchat.user where textchat.user.username="${req.body.username}"`, function (err, resD1) {
-                res.send(resD1[0].id);
-            });
         });
     });
 });
@@ -164,43 +156,32 @@ app.post("/checkUsername", function (req, res) {
 io.sockets.on("connection", function (socket) {
     console.log(socket.id + " connected!");
 
-    // TODO REWORK
-    socket.on("reg", function (data) {
-        console.log("\"" + data.name + "\" registered in the chat!");
-    });
-
     socket.on("mes", function (data) {
         if (data.message !== "") {
-            con.query(`select textchat.user.username as username from textchat.user where textchat.user.iduser="${data.sender}"`, function (err, resD0) {
+            con.query(`select textchat.user.username as username, textchat.user.picture as pfp, textchat.user.color as color from textchat.user where textchat.user.iduser="${data.sender}"`, function (err, resD) {
                 if (err) {
                     console.log(err);
                     return;
                 }
-                if (resD0[0] == undefined) {
+                if (resD[0] == undefined) {
                     socket.emit("qErr", {
                         errorCode: 2,
                         errorMessage: "User-ID not found"
                     });
                     return;
                 }
-                let name = resD0[0].username;
-                con.query(`SELECT textchat.user.picture as pfp, textchat.user.color as color FROM textchat.user WHERE textchat.user.username="${name}"`, function (err, resD) {
+                let name = resD[0].username;
+                fs.readFile("profilepictures\\" + resD[0].pfp, function (err, picData) {
                     if (err) {
                         console.log(err);
                         return;
                     }
-                    fs.readFile("profilepictures\\" + resD[0].pfp, function (err, picData) {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
 
-                        io.sockets.emit("newMes", {
-                            sender: name,
-                            message: data.message,
-                            pfp: `data:image/${resD[0].pfp.substring(resD[0].pfp.lastIndexOf(".") + 1)};base64,` + picData.toString("base64"),
-                            color: resD[0].color
-                        });
+                    io.sockets.emit("newMes", {
+                        sender: name,
+                        message: data.message,
+                        pfp: `data:image/${resD[0].pfp.substring(resD[0].pfp.lastIndexOf(".") + 1)};base64,` + picData.toString("base64"),
+                        color: resD[0].color
                     });
                 });
             });
