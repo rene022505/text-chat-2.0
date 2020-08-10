@@ -16,12 +16,16 @@ const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 
 const { v4: uuidv4, v1: uuidv1 } = require('uuid');
+const { checkServerIdentity } = require("tls");
 
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: ""
 });
+
+const usernameCheckQuery = "SELECT count(textchat.user.username) as valid FROM textchat.user WHERE textchat.user.username=";
+
 con.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
@@ -49,7 +53,8 @@ app.get("/", function (req, res) {
 });
 
 app.post("/login", function (req, res) {
-    con.query(`SELECT textchat.user.password as password, textchat.user.iduser as id FROM textchat.user where textchat.user.username="${req.body.username}"`, function(err, resD) {
+    const query = "SELECT textchat.user.password as password, textchat.user.iduser as id FROM textchat.user where textchat.user.username= " + mysql.escape(req.body.username);
+    con.query(query, function(err, resD) {
         if (err) {
             console.log(err);
             res.sendStatus(404);
@@ -85,7 +90,7 @@ app.post("/register", function (req, res) {
         return;
     }
 
-    con.query(`SELECT count(textchat.user.username) as valid FROM textchat.user WHERE textchat.user.username="${req.body.username}"`, function (err, resD) {
+    con.query(usernameCheckQuery + mysql.escape(req.body.username), function (err, resD) {
         if (err) {
             console.log(err);
             res.sendStatus(404);
@@ -127,7 +132,9 @@ app.post("/register", function (req, res) {
                 return;
             }
             let tempUUID = uuidv4();
-            con.query(`INSERT INTO textchat.user(iduser, username, password, picture, color) VALUES ("${tempUUID}", "${req.body.username}", "${hash}", "${filename}", "${req.body.color.substring(1)}");`, function (err, resD) {
+            const query = "INSERT INTO textchat.user(iduser, username, password, picture, color) VALUES (" + mysql.escape(tempUUID) + ", " + mysql.escape(req.body.username) + ", " + mysql.escape(hash) + 
+                           ", " + mysql.escape(filename) + ", " + mysql.escape(req.body.color.substring(1)) + ");";
+            con.query(query, function (err, resD) {
                 if (err) {
                     console.log(err);
                     res.sendStatus(404);
@@ -140,7 +147,7 @@ app.post("/register", function (req, res) {
 });
 
 app.post("/checkUsername", function (req, res) {
-    con.query(`SELECT count(textchat.user.username) as valid FROM textchat.user WHERE textchat.user.username="${req.body.username}"`, function (err, resD) {
+    con.query(usernameCheckQuery + mysql.escape(req.body.username), function (err, resD) {
         if (err) {
             console.log(err);
             res.sendStatus(404);
@@ -158,7 +165,8 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("mes", function (data) {
         if (data.message !== "") {
-            con.query(`select textchat.user.username as username, textchat.user.picture as pfp, textchat.user.color as color from textchat.user where textchat.user.iduser="${data.sender}"`, function (err, resD) {
+            const query = "select textchat.user.username as username, textchat.user.picture as pfp, textchat.user.color as color from textchat.user where textchat.user.iduser=" + mysql.escape(data.sender);
+            con.query(query, function (err, resD) {
                 if (err) {
                     console.log(err);
                     return;
@@ -177,8 +185,7 @@ io.sockets.on("connection", function (socket) {
                         return;
                     }
 
-                    io.sockets.emit("newMes", {
-                        sender: name,
+                    io.sockets.emit("newMes", {                        sender: name,
                         message: data.message,
                         pfp: `data:image/${resD[0].pfp.substring(resD[0].pfp.lastIndexOf(".") + 1)};base64,` + picData.toString("base64"),
                         color: resD[0].color

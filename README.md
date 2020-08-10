@@ -1,20 +1,18 @@
-Everything is kinda ugly (css rework)
+- Everything is kinda ugly (css rework)
 
-Add stuff like logging out, register button on the login page
+- Add stuff like logging out, register button on the login page
 
-save massages to database
+- save massages to database
 
-USER SANITATION!!!!!
+- USER SANITATION!!!!! (no more xss, i think i prevented sql injection with mysql.escape())
 
-restructure of backend
+- restructure of backend
 
-combine database querries
+- optimizing in general
 
-optimizing in general
-
-maybe  require email for registration to allow nickname changing
+- maybe  require email for registration to allow nickname changing
 
 
 For the really bord times:
 
-mobile port 
+- mobile port 
