@@ -16,7 +16,6 @@ const mysql = require("mysql");
 const bcrypt = require("bcrypt");
 
 const { v4: uuidv4, v1: uuidv1 } = require('uuid');
-const { checkServerIdentity } = require("tls");
 
 const con = mysql.createConnection({
     host: "localhost",
@@ -54,7 +53,7 @@ app.get("/", function (req, res) {
 
 app.post("/login", function (req, res) {
     const query = "SELECT textchat.user.password as password, textchat.user.iduser as id FROM textchat.user where textchat.user.username= " + mysql.escape(req.body.username);
-    con.query(query, function(err, resD) {
+    con.query(query, function (err, resD) {
         if (err) {
             console.log(err);
             res.sendStatus(404);
@@ -64,7 +63,7 @@ app.post("/login", function (req, res) {
             res.send("1");
             return;
         }
-        bcrypt.compare(req.body.password, resD[0].password, function(err, resH) {
+        bcrypt.compare(req.body.password, resD[0].password, function (err, resH) {
             if (err) {
                 console.log(err);
                 return;
@@ -132,8 +131,8 @@ app.post("/register", function (req, res) {
                 return;
             }
             let tempUUID = uuidv4();
-            const query = "INSERT INTO textchat.user(iduser, username, password, picture, color) VALUES (" + mysql.escape(tempUUID) + ", " + mysql.escape(req.body.username) + ", " + mysql.escape(hash) + 
-                           ", " + mysql.escape(filename) + ", " + mysql.escape(req.body.color.substring(1)) + ");";
+            const query = "INSERT INTO textchat.user(iduser, username, password, picture, color) VALUES (" + mysql.escape(tempUUID) + ", " + mysql.escape(req.body.username) + ", " + mysql.escape(hash) +
+                ", " + mysql.escape(filename) + ", " + mysql.escape(req.body.color.substring(1)) + ");";
             con.query(query, function (err, resD) {
                 if (err) {
                     console.log(err);
@@ -165,30 +164,35 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("mes", function (data) {
         if (data.message !== "") {
-            const query = "select textchat.user.username as username, textchat.user.picture as pfp, textchat.user.color as color from textchat.user where textchat.user.iduser=" + mysql.escape(data.sender);
-            con.query(query, function (err, resD) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                if (resD[0] == undefined) {
-                    socket.emit("qErr", {
-                        errorCode: 2,
-                        errorMessage: "User-ID not found"
-                    });
-                    return;
-                }
-                let name = resD[0].username;
-                fs.readFile("profilepictures\\" + resD[0].pfp, function (err, picData) {
+            let messageQuery = "INSERT INTO textchat.message(textchat.message.idsender, textchat.message.messagecontent, textchat.message.time) VALUES (" +
+                mysql.escape(data.sender) + ", " + mysql.escape(data.message) + ", " + mysql.escape(new Date()) + ")";
+            con.query(messageQuery, function (err, resD) {
+                const query = "select textchat.user.username as username, textchat.user.picture as pfp, textchat.user.color as color from textchat.user where textchat.user.iduser=" + mysql.escape(data.sender);
+                con.query(query, function (err, resD) {
                     if (err) {
                         console.log(err);
                         return;
                     }
+                    if (resD[0] == undefined) {
+                        socket.emit("qErr", {
+                            errorCode: 2,
+                            errorMessage: "User-ID not found"
+                        });
+                        return;
+                    }
+                    let name = resD[0].username;
+                    fs.readFile("profilepictures\\" + resD[0].pfp, function (err, picData) {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        }
 
-                    io.sockets.emit("newMes", {                        sender: name,
-                        message: data.message,
-                        pfp: `data:image/${resD[0].pfp.substring(resD[0].pfp.lastIndexOf(".") + 1)};base64,` + picData.toString("base64"),
-                        color: resD[0].color
+                        io.sockets.emit("newMes", {
+                            sender: name,
+                            message: data.message,
+                            pfp: `data:image/${resD[0].pfp.substring(resD[0].pfp.lastIndexOf(".") + 1)};base64,` + picData.toString("base64"),
+                            color: resD[0].color
+                        });
                     });
                 });
             });
