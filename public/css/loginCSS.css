@@ -27,15 +27,16 @@ input:focus, button:focus {
     font-size: small;
     display: block;
     text-align: left;
-    margin-bottom: .5rem;
+    margin-bottom: .25rem;
 }
 
 .customLabel {
-    margin-bottom: .5rem;
+    font-size: small;
+    margin-bottom: .25rem;
 }
 
 input {
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
 }
 
 .regHeader {
@@ -59,14 +60,27 @@ input {
     padding: 1rem;
 }
 
-.submitButton {
+.loginButton {
     border: none;
-    font-size: large;
-    border-radius: 5px;
+    font-size: x-large;
+    border-bottom-left-radius: 5px;
     margin-bottom: .5rem;
+    width: 182px;
 }
 
-.submitButton:hover, #pfp:hover, #color:hover {
+.gap {
+    width: 4px;
+}
+
+.registerButton {
+    border: none;
+    font-size: x-large;
+    border-bottom-right-radius: 5px;
+    margin-bottom: .5rem;
+    width: 182px;
+}
+
+.loginButton:hover, .registerButton:hover, #pfp:hover, #color:hover {
     cursor: pointer;
 }
 

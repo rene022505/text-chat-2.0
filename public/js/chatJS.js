@@ -12,7 +12,7 @@ $(document).ready(function () {
         }
     });
 
-    document.getElementById("userInput").addEventListener("keyup", function (event) {
+    $("#userInput").on("keyup", function (event) {
         // Number 13 is the "Enter" key on the keyboard
         if (event.keyCode === 13) {
             // Cancel the default action, if needed
@@ -20,6 +20,11 @@ $(document).ready(function () {
             // Trigger the button element with a click
             $("#send").click();
         }
+    });
+
+    $(".logoff").on("click", function() {
+        window.sessionStorage.removeItem("id");
+        window.location.href = "http://localhost:6969/";
     });
 
     socket.on("newMes", function (data) {

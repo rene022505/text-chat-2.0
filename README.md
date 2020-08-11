@@ -1,7 +1,3 @@
-- Everything is kinda ugly (css rework)
-
-- Add stuff like logging out, register button on the login page
-
 - load messages when enter chat (50 at a time find way to load more when needed etc)
 
 - USER SANITATION!!!!! (no more xss, i think i prevented sql injection with mysql.escape())

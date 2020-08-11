@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="./../css/loginCSS.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <title>Register</title>
+    <title>Login</title>
 </head>
 
 <body>
@@ -20,9 +20,10 @@
                 <label class="regLabel">PASSWORD</label>
                 <input name="password" class="input-text" type="password" id="password" required>
 
-                <button type="button" id="login" class="submitButton">Login</button>
-                <div id="fail" class="invisible">
-                    <p id="failDesc"></p>
+                <div style="display: inline-flex;">
+                    <button type="button" id="login" class="loginButton">Login</button>
+                    <div class="gap"></div>
+                    <button type="button" id="register" class="registerButton">Register</button>
                 </div>
             </form>
         </div>
