@@ -65,7 +65,10 @@ input {
     font-size: x-large;
     border-bottom-left-radius: 5px;
     margin-bottom: .5rem;
-    width: 182px;
+    width: 262px;
+    background-color: #262138;
+    color: #dbdbdb;
+    text-align: left;
 }
 
 .gap {
@@ -77,11 +80,14 @@ input {
     font-size: x-large;
     border-bottom-right-radius: 5px;
     margin-bottom: .5rem;
-    width: 182px;
+    width: 102px;
+    background-color: #4a4462;
+    color: #dbdbdb;
 }
 
-.loginButton:hover, .registerButton:hover, #pfp:hover, #color:hover {
+.loginButton:hover, .registerButton:hover {
     cursor: pointer;
+    background-color: #645c86;
 }
 
 .invisible {

@@ -77,10 +77,14 @@ input {
     border-bottom-left-radius: 5px;
     margin-bottom: .5rem;
     width: 366px;
+    background-color: #262138;
+    color: #dbdbdb;
+    text-align: left;
 }
 
 .submitButton:hover, #pfp:hover, #color:hover {
     cursor: pointer;
+    background-color: #645c86;
 }
 
 .green {
