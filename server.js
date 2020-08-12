@@ -3,6 +3,7 @@ const fileUpload = require('express-fileupload');
 
 const bodyParser = require("body-parser");
 const path = require("path");
+const mysql = require("mysql");
 
 const fs = require("fs");
 
@@ -11,24 +12,14 @@ const server = app.listen(6969, startUp);
 
 const io = require("socket.io")(server);
 
-const mysql = require("mysql");
-
 const bcrypt = require("bcrypt");
 
 const { v4: uuidv4, v1: uuidv1 } = require('uuid');
 
-const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: ""
-});
 
 const usernameCheckQuery = "SELECT count(textchat.user.username) as valid FROM textchat.user WHERE textchat.user.username=";
 
-con.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
-});
+const con = require("./Config/database.js");
 
 function startUp() {
     console.log("Server started at " + server.address().address + ":" + server.address().port);

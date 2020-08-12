@@ -105,3 +105,4 @@ dist
 
 .vscode/
 profilepictures/
+config.env
