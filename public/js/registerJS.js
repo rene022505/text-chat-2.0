@@ -1,3 +1,13 @@
+function cssClassThing(query, order) {
+    if (order) {
+        document.querySelector(query).classList.remove("red");
+        document.querySelector(query).classList.add("green");
+    } else {
+        document.querySelector(query).classList.remove("green");
+        document.querySelector(query).classList.add("red");
+    }
+}
+
 document.querySelector("#username").addEventListener("input", function () {
     if (document.querySelector("#username").value.length > 3 && document.querySelector("#username").value.length < 41) {
         let response = fetch("/checkUsername", {
@@ -11,45 +21,40 @@ document.querySelector("#username").addEventListener("input", function () {
         })
             .then(data => {
                 if (data.status == 200) {
-                    document.querySelector("#username").classList.remove("red");
-                    document.querySelector("#username").classList.add("green");
+                    cssClassThing("#username", 1);
                 } else {
-                    document.querySelector("#username").classList.remove("green");
-                    document.querySelector("#username").classList.add("red");
+                    cssClassThing("#username", 0);
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
     } else {
-        document.querySelector("#username").classList.remove("green");
-        document.querySelector("#username").classList.add("red");
+        cssClassThing("#username", 0);
     }
 });
 
 document.querySelector("#password").addEventListener("input", function () {
     if (document.querySelector("#password").value.length < 6 || document.querySelector("#password").value.length > 64) {
-        document.querySelector("#password").classList.remove("green");
-        document.querySelector("#password").classList.add("red");
-        document.querySelector("#confirmPassword").classList.remove("green");
-        document.querySelector("#confirmPassword").classList.add("red");
+        cssClassThing("#password", 0);
+        if (document.querySelector("#confirmPassword").value !== document.querySelector("#password").value) {
+            cssClassThing("#confirmPassword", 0);
+        } else {
+            cssClassThing("#confirmPassword", 1);
+        }
     } else {
         if (document.querySelector("#confirmPassword").value !== document.querySelector("#password").value) {
-            document.querySelector("#confirmPassword").classList.remove("green");
-            document.querySelector("#confirmPassword").classList.add("red");
+            cssClassThing("#confirmPassword", 0);
         }
-        document.querySelector("#password").classList.remove("red");
-        document.querySelector("#password").classList.add("green");
+        cssClassThing("#password", 1);
     }
 });
 
 document.querySelector("#confirmPassword").addEventListener("input", function () {
     if (document.querySelector("#confirmPassword").value !== document.querySelector("#password").value || document.querySelector("#confirmPassword").value === "") {
-        document.querySelector("#confirmPassword").classList.remove("green");
-        document.querySelector("#confirmPassword").classList.add("red");
+        cssClassThing("#confirmPassword", 0);
     } else {
-        document.querySelector("#confirmPassword").classList.remove("red");
-        document.querySelector("#confirmPassword").classList.add("green");
+        cssClassThing("#confirmPassword", 1);
     }
 });
 

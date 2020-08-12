@@ -18,6 +18,10 @@
 
 - change message order server side
 
+- refactor register js into function to make it look cleaner
+
+- line 40 in registerJS doesnt work for some reason (nothing happens /shrug)
+
 
 For the really bord times:
 
