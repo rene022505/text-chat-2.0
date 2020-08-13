@@ -4,6 +4,8 @@ const confirmPasswordField = document.querySelector("#confirmPassword");
 const registerButton = document.querySelector("#register");
 const loginButton = document.querySelector("#login");
 
+const host = "http://localhost:6969";
+
 
 function cssClassThing(query, order) {
     if (order) {
@@ -88,7 +90,7 @@ registerButton.addEventListener("click", function () {
                                     alert("Please select a valid image file with maximum 10mb");
                                 else {
                                     sessionStorage.setItem("id", response);
-                                    window.location.href = "http://localhost:6969/chat"; // TODO CHANGE
+                                    window.location.href = host + "/chat"; // TODO CHANGE
                                 }
                             });
                         }
@@ -102,5 +104,5 @@ registerButton.addEventListener("click", function () {
 });
 
 loginButton.addEventListener("click", function () {
-    window.location.href = "http://localhost:6969";
+    window.location.href = host;
 });

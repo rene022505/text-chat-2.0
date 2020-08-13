@@ -3,6 +3,8 @@ const loginButton = document.querySelector("#login");
 const registerButton = document.querySelector("#register");
 const usernameField = document.querySelector("#username");
 
+const host = "http://localhost:6969";
+
 
 passwordField.addEventListener("keyup", function (event) {
     // Number 13 is the "Enter" key on the keyboard
@@ -31,11 +33,11 @@ loginButton.addEventListener("click", function () {
                 alert("Username and password do not match");
             } else {
                 sessionStorage.setItem("id", response);
-                window.location.href = "http://localhost:6969/chat"; // TODO CHANGE
+                window.location.href = host + "/chat"; // TODO CHANGE
             }
         })
 });
 
 registerButton.addEventListener("click", function () {
-    window.location.href = "http://localhost:6969/register";
+    window.location.href = host + "/register";
 });

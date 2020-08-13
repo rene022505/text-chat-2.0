@@ -193,15 +193,19 @@ function loadMessage(_sender, socket, _message, _time, _scrollDown, _append) {
     });
 }
 
-function get50Messages(query, socket, _scrollDown, _append) {
+function get50Messages(query, _reverse, socket, _scrollDown, _append) {
     con.query(query, function (err, resDin) {
         if (errorHandler(err)) {
             return;
         }
 
-
+        let messages;
         if (resDin[0] !== undefined) {
-            const messages = resDin.reverse();
+            if (_reverse) {
+                messages = resDin.reverse();
+            } else {
+                messages = resDin;
+            }
             socket.emit("oldestMessage", {
                 id: messages[0].id
             });
@@ -252,7 +256,7 @@ io.sockets.on("connection", function (socket) {
             console.log(resD[0].username + " connected!");
 
             const query = getGeneralMessageInfoQueryPart + " order by textchat.message.idmessage desc limit 50"; // get last 50 messages on connecting
-            get50Messages(query, socket, true, true);
+            get50Messages(query, true, socket, true, true);
         })
     });
 
@@ -287,6 +291,6 @@ io.sockets.on("connection", function (socket) {
     socket.on("moreMessages", function (data) {
         const query = getGeneralMessageInfoQueryPart + " where textchat.message.idmessage < " + mysql.escape(data.id) + " order by textchat.message.idmessage desc limit 50";
 
-        get50Messages(query, socket, false, false);
+        get50Messages(query, false, socket, false, false);
     });
 });

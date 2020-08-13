@@ -1,4 +1,6 @@
-const socket = io.connect('localhost:6969');
+const host = "http://localhost:6969";
+
+const socket = io.connect(host);
 let temp = document.createElement("div");
 
 const sendButton = document.querySelector("#send");
@@ -7,7 +9,6 @@ const logOffButton = document.querySelector(".logoff");
 const chatGlobal = document.querySelector(".chat");
 const charCount = document.querySelector(".count");
 let chatScroll = document.getElementsByClassName("chat")[0];
-
 
 
 sendButton.addEventListener("click", function () {
@@ -41,7 +42,7 @@ userInputField.addEventListener("keyup", function (event) {
 logOffButton.addEventListener("click", function () {
     window.sessionStorage.removeItem("id");
     window.sessionStorage.removeItem("oldestMessage");
-    window.location.href = "http://localhost:6969/";
+    window.location.href = host;
 });
 
 socket.on("newMes", function (data) {
@@ -71,12 +72,6 @@ socket.on("newMes", function (data) {
 let isScrolling;
 
 chatGlobal.addEventListener("scroll", function () {
-    if (chatScroll.scrollTop == 0) {
-        socket.emit("moreMessages", {
-            id: window.sessionStorage.getItem("oldestMessage") // beatiful
-        });
-    }
-
     window.clearTimeout(isScrolling);
 
     isScrolling = setTimeout(function () {
