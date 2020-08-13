@@ -1,3 +1,10 @@
+const usernameField = document.querySelector("#username");
+const passwordField = document.querySelector("#password");
+const confirmPasswordField = document.querySelector("#confirmPassword");
+const registerButton = document.querySelector("#register");
+const loginButton = document.querySelector("#login");
+
+
 function cssClassThing(query, order) {
     if (order) {
         document.querySelector(query).classList.remove("red");
@@ -8,15 +15,15 @@ function cssClassThing(query, order) {
     }
 }
 
-document.querySelector("#username").addEventListener("input", function () {
-    if (document.querySelector("#username").value.length > 3 && document.querySelector("#username").value.length < 41) {
+usernameField.addEventListener("input", function () {
+    if (usernameField.value.length > 3 && usernameField.value.length < 41) {
         let response = fetch("/checkUsername", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                username: document.querySelector("#username").value
+                username: usernameField.value
             })
         })
             .then(data => {
@@ -34,57 +41,69 @@ document.querySelector("#username").addEventListener("input", function () {
     }
 });
 
-document.querySelector("#password").addEventListener("input", function () {
-    if (document.querySelector("#password").value.length < 6 || document.querySelector("#password").value.length > 64) {
+passwordField.addEventListener("input", function () {
+    if (passwordField.value.length < 6 || passwordField.value.length > 64) {
         cssClassThing("#password", 0);
-        if (document.querySelector("#confirmPassword").value !== document.querySelector("#password").value) {
+        if (confirmPasswordField.value !== passwordField.value) {
             cssClassThing("#confirmPassword", 0);
         } else {
             cssClassThing("#confirmPassword", 1);
         }
     } else {
-        if (document.querySelector("#confirmPassword").value !== document.querySelector("#password").value) {
+        if (confirmPasswordField.value !== passwordField.value) {
             cssClassThing("#confirmPassword", 0);
         }
         cssClassThing("#password", 1);
     }
 });
 
-document.querySelector("#confirmPassword").addEventListener("input", function () {
-    if (document.querySelector("#confirmPassword").value !== document.querySelector("#password").value || document.querySelector("#confirmPassword").value === "") {
+confirmPasswordField.addEventListener("input", function () {
+    if (confirmPasswordField.value !== passwordField.value || confirmPasswordField.value === "") {
         cssClassThing("#confirmPassword", 0);
     } else {
         cssClassThing("#confirmPassword", 1);
     }
 });
 
-document.querySelector("#register").addEventListener("click", function () {
-    if (document.querySelector("#username").value.length > 3 && document.querySelector("#username").value.length < 41) {
-        if (document.querySelector("#password").value.length > 5 && document.querySelector("#password").value.length < 65) {
-            if (document.querySelector("#confirmPassword").value === document.querySelector("#password").value) {
+registerButton.addEventListener("click", function () {
+    if (usernameField.value.length > 3 && usernameField.value.length < 41) {
+        if (passwordField.value.length > 5 && passwordField.value.length < 65) {
+            if (confirmPasswordField.value === passwordField.value) {
                 let response = fetch("/register", {
                     method: "post",
                     body: new FormData(document.querySelector("#form"))
                 })
-                    .then(response => response.text())
-                    .then(function (response) {
-                        if (response == 1)
-                            alert("Username must be between 4 and 40 characters");
-                        else if (response == 2)
-                            alert("Username already exists");
-                        else if (response == 3)
-                            alert("Password must be bewteen 6 and 64 characters");
-                        else if (response == 4)
-                            alert("Passwords don't match");
-                        else {
-                            sessionStorage.setItem("id", response);
-                            window.location.href = "http://localhost:6969/chat"; // TODO CHANGE
+                    .then(response => {
+                        if (response.status == 404) {
+                            alert("Something went wrong, please try again!");
+                            return;
+                        } else {
+                            response.text().then(function (response) {
+                                if (response == 1)
+                                    alert("Username must be between 4 and 40 characters");
+                                else if (response == 2)
+                                    alert("Username already exists");
+                                else if (response == 3)
+                                    alert("Password must be bewteen 6 and 64 characters");
+                                else if (response == 4)
+                                    alert("Passwords don't match");
+                                else if (response == 5)
+                                    alert("Please select a valid image file with maximum 10mb");
+                                else {
+                                    sessionStorage.setItem("id", response);
+                                    window.location.href = "http://localhost:6969/chat"; // TODO CHANGE
+                                }
+                            });
                         }
-                    });
+                    })
             } else
                 alert("Passwords don't match")
         } else
             alert("Password must be between 6 and 64 characters");
     } else
         alert("Username must be between 4 and 40 characters");
+});
+
+loginButton.addEventListener("click", function () {
+    window.location.href = "http://localhost:6969";
 });

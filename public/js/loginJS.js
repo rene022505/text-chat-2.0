@@ -1,22 +1,28 @@
-document.querySelector("#password").addEventListener("keyup", function (event) {
+const passwordField = document.querySelector("#password");
+const loginButton = document.querySelector("#login");
+const registerButton = document.querySelector("#register");
+const usernameField = document.querySelector("#username");
+
+
+passwordField.addEventListener("keyup", function (event) {
     // Number 13 is the "Enter" key on the keyboard
     if (event.keyCode === 13) {
         // Cancel the default action, if needed
         event.preventDefault();
         // Trigger the button element with a click
-        document.querySelector("#login").click();
+        loginButton.click();
     }
 });
 
-document.querySelector("#login").addEventListener("click", function () {
+loginButton.addEventListener("click", function () {
     let response = fetch("/login", {
         method: "post",
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            username: document.querySelector("#username").value,
-            password: document.querySelector("#password").value
+            username: usernameField.value,
+            password: passwordField.value
         })
     })
         .then(response => response.text())
@@ -30,6 +36,6 @@ document.querySelector("#login").addEventListener("click", function () {
         })
 });
 
-document.querySelector("#register").addEventListener("click", function () {
+registerButton.addEventListener("click", function () {
     window.location.href = "http://localhost:6969/register";
 });

@@ -14,12 +14,14 @@ const io = require("socket.io")(server);
 
 const bcrypt = require("bcrypt");
 
-const { v4: uuidv4, v1: uuidv1 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 
 const usernameCheckQuery = "SELECT count(textchat.user.username) as valid FROM textchat.user WHERE textchat.user.username=";
 
 const con = require("./Config/database.js");
+
+let pfpNameCount = 0;
 
 function startUp() {
     console.log("Server started at " + server.address().address + ":" + server.address().port);
@@ -88,12 +90,12 @@ app.post("/register", function (req, res) {
         }
 
         if (resD[0].valid !== 0) {
-            res.send("2");
+            res.send("2"); // name already used
             return;
         }
 
         if (req.body.password.length < 6 || req.body.password.length > 64) {
-            res.send("3");
+            res.send("3"); 
             return;
         }
 
@@ -104,13 +106,15 @@ app.post("/register", function (req, res) {
 
         let filetype;
         let filename;
-        if (!(!req.files || Object.keys(req.files).length === 0)) {
+        if (!(!req.files || Object.keys(req.files).length === 0)) { // if file is provided else use default
             filetype = req.files.pfp.mimetype;
-            if (filetype.substring(0, filetype.lastIndexOf("/")) !== "image")
-                filename = "default.png";
-            else
-                filename = `${uuidv1()}.${filetype.substring(filetype.lastIndexOf("/") + 1)}`;
-            req.files.pfp.mv(path.join(__dirname, `profilepictures/${filename}`));
+            if (filetype.substring(0, filetype.lastIndexOf("/")) !== "image") {
+                res.send("5"); // file is not image
+                return;
+            } else {
+                filename = `${pfpNameCount++}.${filetype.substring(filetype.lastIndexOf("/") + 1)}`;
+                req.files.pfp.mv(path.join(__dirname, `profilepictures/${filename}`));
+            }
         } else {
             filename = "default.png";
         }
@@ -152,6 +156,25 @@ app.post("/checkUsername", function (req, res) {
 
 io.sockets.on("connection", function (socket) {
     console.log(socket.id + " connected!");
+    socket.emit("identifyS");
+
+    socket.on("identifyC", function(data) {
+        const query = "select textchat.user.username as username from textchat.user where textchat.user.iduser=" + mysql.escape(data.id);
+        con.query(query, function(err, resD) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            if (resD[0] == undefined) {
+                socket.emit("qErr", {
+                    errorCode: 2,
+                    errorMessage: "User-ID not found"
+                });
+                return;
+            }
+            console.log(resD[0].username + " connected!");
+        })
+    });
 
     socket.on("mes", function (data) {
         if (data.message !== "") {

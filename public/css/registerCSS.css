@@ -21,6 +21,17 @@ input:focus, button:focus {
     font-size: x-large;
     color: black;
     width: 360px;
+    border: none;
+}
+
+#username {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+#confirmPassword {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .regLabel {
@@ -38,6 +49,21 @@ input:focus, button:focus {
 #pfpDiv, #colorDiv {
     display: flex;
     flex-direction: column;
+}
+
+.filePretty {
+    border: none;
+    font-size: x-large;
+    border-top-left-radius: 8px;
+    margin-bottom: .5rem;
+    width: 262px;
+    background-color: #262138;
+    color: #dbdbdb;
+    text-align: left;
+}
+
+#colorLabel {
+    margin-left: 2px;
 }
 
 .customLabel {
@@ -70,19 +96,42 @@ input {
     padding: 1rem;
 }
 
-.submitButton {
+.registerButton {
     border: none;
     font-size: x-large;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 8px;
     margin-bottom: .5rem;
-    width: 366px;
+    width: 262px;
     background-color: #262138;
     color: #dbdbdb;
     text-align: left;
 }
 
-.submitButton:hover, #pfp:hover, #color:hover {
+.gap {
+    width: 4px;
+}
+
+.loginButton {
+    border: none;
+    font-size: x-large;
+    border-bottom-right-radius: 8px;
+    margin-bottom: .5rem;
+    width: 102px;
+    background-color: #4a4462;
+    color: #dbdbdb;
+}
+
+.colorPretty {
+    border: none;
+    font-size: x-large;
+    border-top-right-radius: 8px;
+    margin-bottom: .5rem;
+    width: 102px;
+    background-color: #262138;
+    color: #dbdbdb;
+}
+
+.registerButton:hover, .filePretty:hover, .loginButton:hover, .colorPretty:hover {
     cursor: pointer;
     background-color: #645c86;
 }
@@ -98,4 +147,13 @@ input {
     border-width: 2px;
     font-size: x-large;
     width: 360px;
+}
+
+#pfp, #color {
+    visibility: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-top-right-radius: 8px;
+    border-color: transparent;
 }

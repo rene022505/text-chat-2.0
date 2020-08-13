@@ -14,26 +14,37 @@
             <h1 class="regHeader">REGISTER</h1>
             <form id="form">
                 <label class="regLabel">NAME</label>
-                <input name="username" class="input-text" type="text" id="username" required>
+                <input name="username" class="input-text" type="text" id="username" minlength="4" maxlength="40" required>
                 
                 <label class="regLabel">PASSWORD</label>
-                <input name="password" class="input-text" type="password" id="password" required>
+                <input name="password" class="input-text" type="password" id="password" minlength="6" maxlength="64" required>
                 
                 <label class="regLabel">CONFIRM PASSWORD</label>
-                <input name="confirmPassword" class="input-text" type="password" id="confirmPassword" required>
+                <input name="confirmPassword" class="input-text" type="password" id="confirmPassword" minlength="6" maxlength="64" required>
 
                 <div id="accCustom">
                     <div id="pfpDiv">
-                        <label class="customLabel">PROFILE PICTURE</label>
-                        <input name="pfp" type="file" id="pfp">
+                        <label class="customLabel">PROFILE PICTURE
+                            <div class="fileInput">
+                                <input name="pfp" type="file" id="pfp">
+                                <div type="button" class="filePretty">&nbsp;Select your picture</div>
+                            </div>
+                        </label>
                     </div>
+                    <div class="gap"></div>
                     <div id="colorDiv">
-                        <label class="customLabel">NAME COLOR</label>
-                        <input name="color" type="color" id="color">
+                        <label class="customLabel" id="colorLabel">NAME COLOR
+                            <input name="color" type="color" id="color">
+                            <div class="colorPretty">&nbsp;&nbsp;&nbsp;Color</div>
+                        </label>
                     </div>
                 </div>
 
-                <button type="button" id="register" class="submitButton">Register</button>
+                <div style="display: inline-flex;">
+                    <button type="button" id="register" class="registerButton">Register</button>
+                    <div class="gap"></div>
+                    <button type="button" id="login" class="loginButton">Login</button>
+                </div>
             </form>
         </div>
     </div>

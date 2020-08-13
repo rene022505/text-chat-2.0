@@ -1,28 +1,34 @@
 const socket = io.connect('localhost:6969');
 let temp = document.createElement("div");
 
-document.querySelector("#send").addEventListener("click", function () {
-    if (document.querySelector("#userInput").value !== "") {
+const sendButton = document.querySelector("#send");
+const userInputField = document.querySelector("#userInput");
+const logOffButton = document.querySelector(".logoff");
+const chatGlobal = document.querySelector(".chat");
+
+
+sendButton.addEventListener("click", function () {
+    if (userInputField.value !== "" && userInputField.value.length < 1000) {
         socket.emit("mes", {
             sender: window.sessionStorage.getItem("id"),
-            message: document.querySelector("#userInput").value
+            message: userInputField.value
         });
 
-        document.querySelector("#userInput").value = "";
+        userInputField.value = "";
     }
 });
 
-document.querySelector("#userInput").addEventListener("keyup", function (event) {
+userInputField.addEventListener("keyup", function (event) {
     // Number 13 is the "Enter" key on the keyboard
     if (event.keyCode === 13) {
         // Cancel the default action, if needed
         event.preventDefault();
         // Trigger the button element with a click
-        document.querySelector("#send").click();
+        sendButton.click();
     }
 });
 
-document.querySelector(".logoff").addEventListener("click", function () {
+logOffButton.addEventListener("click", function () {
     window.sessionStorage.removeItem("id");
     window.location.href = "http://localhost:6969/";
 });
@@ -37,7 +43,7 @@ socket.on("newMes", function (data) {
     content.textContent = data.message;
 
     temp.innerHTML = `<div class="message"><div class="image"><img src=${data.pfp} class="pfp"></div><div class=text>${name.outerHTML}${content.outerHTML}</div></div>`;
-    document.querySelector(".chat").appendChild(temp.firstChild);
+    chatGlobal.appendChild(temp.firstChild);
 
     //scrolls to bottom
     const chat = document.getElementsByClassName("chat")[0];
@@ -46,4 +52,10 @@ socket.on("newMes", function (data) {
 
 socket.on("qErr", function (data) {
     console.log(data);
+});
+
+socket.on("identifyS", function() {
+    socket.emit("identifyC", {
+        id: window.sessionStorage.getItem("id")
+    });
 });

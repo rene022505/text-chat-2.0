@@ -21,6 +21,17 @@ input:focus, button:focus {
     font-size: x-large;
     color: black;
     width: 360px;
+    border: none
+}
+
+#username {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+#password {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .regLabel {
@@ -63,7 +74,8 @@ input {
 .loginButton {
     border: none;
     font-size: x-large;
-    border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 8px;
+    border-top-left-radius: 8px;
     margin-bottom: .5rem;
     width: 262px;
     background-color: #262138;
@@ -78,7 +90,8 @@ input {
 .registerButton {
     border: none;
     font-size: x-large;
-    border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 8px;
     margin-bottom: .5rem;
     width: 102px;
     background-color: #4a4462;

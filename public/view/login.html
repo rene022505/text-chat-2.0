@@ -14,10 +14,10 @@
             <h1 class="regHeader">LOGIN</h1>
             <form action="/register" method="POST" encType="multipart/form-data" id="form">
                 <label class="regLabel">NAME</label>
-                <input name="username" class="input-text" type="text" id="username" required>
+                <input name="username" class="input-text" type="text" id="username" minlength="4" maxlength="40" required>
                 
                 <label class="regLabel">PASSWORD</label>
-                <input name="password" class="input-text" type="password" id="password" required>
+                <input name="password" class="input-text" type="password" id="password" minlength="6" maxlength="64" required>
 
                 <div style="display: inline-flex;">
                     <button type="button" id="login" class="loginButton">Login</button>
