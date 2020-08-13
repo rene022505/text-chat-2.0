@@ -106,3 +106,5 @@ dist
 .vscode/
 profilepictures/
 config.env
+
+!profilepictures/default.png
