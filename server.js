@@ -199,23 +199,25 @@ function get50Messages(query, _reverse, socket, _scrollDown, _append) {
             return;
         }
 
-        let messages;
         if (resDin[0] !== undefined) {
             if (_reverse) {
-                messages = resDin.reverse();
+                resDin.reverse();
+                socket.emit("oldestMessage", {
+                    id: resDin[0].id
+                });
             } else {
-                messages = resDin;
+                socket.emit("oldestMessage", {
+                    id: resDin.reverse()[0].id
+                });
+                resDin.reverse();
             }
-            socket.emit("oldestMessage", {
-                id: messages[0].id
-            });
 
             for (let i = 0; i < 50; i++) {
-                if (messages[i] == undefined) {
+                if (resDin[i] == undefined) {
                     break;
                 }
 
-                loadMessage(messages[i].sender, socket, messages[i].content, messages[i].time, _scrollDown, _append);
+                loadMessage(resDin[i].sender, socket, resDin[i].content, resDin[i].time, _scrollDown, _append);
             }
         }
     });
