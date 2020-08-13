@@ -40,6 +40,7 @@ userInputField.addEventListener("keyup", function (event) {
 
 logOffButton.addEventListener("click", function () {
     window.sessionStorage.removeItem("id");
+    window.sessionStorage.removeItem("oldestMessage");
     window.location.href = "http://localhost:6969/";
 });
 
@@ -70,6 +71,12 @@ socket.on("newMes", function (data) {
 let isScrolling;
 
 chatGlobal.addEventListener("scroll", function () {
+    if (chatScroll.scrollTop == 0) {
+        socket.emit("moreMessages", {
+            id: window.sessionStorage.getItem("oldestMessage") // beatiful
+        });
+    }
+
     window.clearTimeout(isScrolling);
 
     isScrolling = setTimeout(function () {
@@ -93,8 +100,4 @@ socket.on("identifyS", function () {
 
 socket.on("oldestMessage", function(data) {
     window.sessionStorage.setItem("oldestMessage", data.id);
-});
-
-socket.on("newestMessage", function(data) {
-    window.sessionStorage.setItem("newestMessage", data.id);
 });
