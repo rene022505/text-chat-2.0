@@ -6,7 +6,7 @@
 
 - maybe  require email for registration to allow nickname changing
 
-- restructure of backend
+- restructure and optimize backend!!!!
 
 
 For the really bord times:
