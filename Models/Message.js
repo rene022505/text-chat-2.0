@@ -1,0 +1,3 @@
+class Message extends Model {
+    
+}
