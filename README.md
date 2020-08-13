@@ -4,8 +4,6 @@
 
 - maybe  require email for registration to allow nickname changing
 
-- restructure and optimize backend!!!!
-
 
 For the really bord times:
 
