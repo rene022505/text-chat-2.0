@@ -8,8 +8,9 @@ body {
 
 .chat {
     width: 82vw;
-    height: 94vh;
+    height: 89vh;
     overflow-y: auto;
+    padding-top: 5vh;
 }
 
 .right {
@@ -18,14 +19,28 @@ body {
 }
 
 .left {
-    width: 3vw;
-    height: 100vh;
+    width: 50px;
+    height: 95vh;
+}
+
+.charCount {
+    position: absolute;
+    top: 95vh;
+    left: 0;
+    min-height: 4vh;
+    min-width: 50px;
+}
+
+.count {
+    margin: 1vh;
+    text-align: center;
+    color: red;
 }
 
 .input {
     position: fixed;
     top: 95vh;
-    left: 3vw;
+    left: 50px;
     display: flex;
     flex-direction: row;
     margin: 0;
@@ -55,6 +70,16 @@ body {
     border-bottom-right-radius: 8px;
 }
 
+.messageHeader {
+    display: inline-flex;
+}
+
+.time {
+    margin-left: 5px;
+    font-size: x-small;
+    color: #dbdbdb67;
+}
+
 .sendButton:hover {
     cursor: pointer;
 }
@@ -67,7 +92,6 @@ body {
 .message {
     padding: 6px;
     width: auto;
-    word-wrap: break-word;
     transition-duration: 0.1s;
     border-radius: 4px;
     display: flex;
@@ -75,18 +99,22 @@ body {
 }
 
 .image {
-    width: 48px;
+    min-width: 48px;
     height: 48px;
 }
 
 .logoff {
     vertical-align: middle;
-    width: 3vw;
-    height: 3vw;
+    width: 50px;
+    height: 50px;
 }
 
 .logoff:hover {
     cursor: pointer;
+}
+
+.text {
+    margin-left: 5px;
 }
 
 .pfp {
@@ -94,10 +122,6 @@ body {
     width: 43px;
     height: 43px;
     border-radius: 50%;
-}
-
-.text {
-
 }
 
 .message:hover {
@@ -110,6 +134,9 @@ body {
 }
 
 .content {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    hyphens: auto;
     color: #dbdbdb;
 }
 

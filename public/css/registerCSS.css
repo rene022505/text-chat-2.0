@@ -21,7 +21,7 @@ input:focus, button:focus {
     font-size: x-large;
     color: black;
     width: 360px;
-    border: none;
+    border-color: transparent;
 }
 
 #username {
@@ -55,7 +55,8 @@ input:focus, button:focus {
     border: none;
     font-size: x-large;
     border-top-left-radius: 8px;
-    margin-bottom: .5rem;
+    margin-bottom: .25rem;
+    margin-top: .25rem;
     width: 262px;
     background-color: #262138;
     color: #dbdbdb;
@@ -125,10 +126,11 @@ input {
     border: none;
     font-size: x-large;
     border-top-right-radius: 8px;
-    margin-bottom: .5rem;
+    margin-bottom: .25rem;
     width: 102px;
     background-color: #262138;
     color: #dbdbdb;
+    margin-top: .25rem;
 }
 
 .registerButton:hover, .filePretty:hover, .loginButton:hover, .colorPretty:hover {

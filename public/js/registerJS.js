@@ -44,14 +44,11 @@ usernameField.addEventListener("input", function () {
 passwordField.addEventListener("input", function () {
     if (passwordField.value.length < 6 || passwordField.value.length > 64) {
         cssClassThing("#password", 0);
+    } else {
         if (confirmPasswordField.value !== passwordField.value) {
             cssClassThing("#confirmPassword", 0);
         } else {
             cssClassThing("#confirmPassword", 1);
-        }
-    } else {
-        if (confirmPasswordField.value !== passwordField.value) {
-            cssClassThing("#confirmPassword", 0);
         }
         cssClassThing("#password", 1);
     }
