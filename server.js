@@ -14,8 +14,7 @@ const io = require("socket.io")(server);
 
 const bcrypt = require("bcrypt");
 
-const { v4: uuidv4, v1: uuidv1 } = require('uuid');
-
+const { v4: uuidv4 } = require('uuid');
 
 const usernameCheckQuery = "SELECT count(textchat.user.username) as valid FROM textchat.user WHERE textchat.user.username=";
 const getGeneralUserInfoQuery = "select textchat.user.username as username, textchat.user.picture as pfp, textchat.user.color as color from textchat.user where textchat.user.iduser=";
@@ -119,7 +118,7 @@ app.post("/register", function (req, res) {
                 res.send("5"); // file is not image
                 return;
             } else {
-                filename = `${uuidv1()}.${filetype.substring(filetype.lastIndexOf("/") + 1)}`;
+                filename = `${uuidv4()}.${filetype.substring(filetype.lastIndexOf("/") + 1)}`;
                 req.files.pfp.mv(path.join(__dirname, `profilepictures/${filename}`));
             }
         } else {
